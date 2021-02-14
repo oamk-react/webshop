@@ -1,6 +1,6 @@
 import './App.css';
-import {useState} from 'react';
-import {Switch,Route} from 'react-router-dom';
+import {useState,useEffect} from 'react';
+import {Switch,Route, useLocation} from 'react-router-dom';
 import Footer from './inc/Footer';
 import Header from './inc/Header';
 import Navbar from './inc/Navbar';
@@ -14,22 +14,33 @@ function App() {
   const [category, setCategory] = useState(null);
   const [cart, setCart] = useState([]);
 
-  function changeCategory(category) {
+  let location = useLocation();
+
+  // Location state (selected category) changes, update category (and related components);
+  useEffect(() => {
+    if (location.state!==undefined) {
+      setCategory({id: location.state.id,name: location.state.name});
+    }
+  }, [location.state])
+
+  // Callback function sets first category to be selected, when webshop is opened (for the first time).
+  function setFirstCategory(category) {
     setCategory(category);
   }
-
+  
+  // Callback function add product to cart.
   function addToCart(product) {
-    setCart([...cart,product]);
+    setCart([...cart,product]); // This is immutable, add product to cart and create a new array. 
   }
 
   return (
     <>
-      <Navbar url={URL} changeCategory={changeCategory} cart={cart}/>
+      <Navbar url={URL} setFirstCategory={setFirstCategory} cart={cart}/>
       <Header />
-      <div className="container-fluid">
+      <div id="content" className="container-fluid">
         <Switch>
           <Route path="/" render={() => <Home url={URL} category={category} addToCart={addToCart}/>} exact />
-          <Route path="/order" render={() => <Order cart={cart}/>} />
+          <Route path="/order" render={() => <Order url={URL} cart={cart}/>} />
           <Route component={NotFound} />
         </Switch>
       </div>

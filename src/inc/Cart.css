@@ -1,0 +1,10 @@
+#cart {
+  padding-left: 10px;
+  width: 50px;
+}
+
+#cart span {
+  position: relative;
+  top: -10px;
+  font-size: 0.8em;
+}
