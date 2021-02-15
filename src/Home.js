@@ -1,11 +1,19 @@
 import React,{useState,useEffect} from 'react'
 
-export default function Home({url,category,addToCart}) {
+export default function Home({url,category, search, addToCart}) {
   const [products, setProducts] = useState([]);
 
+  console.log(search);
+
   useEffect(() => {
-    if (category !== null) {
-      const address = url + 'products/getproducts.php/' + category?.id;
+    if (category !== null || search !== '') {
+      let address = '';
+      if (category !== null) {
+        address = url + 'products/getproducts.php/' + category?.id;
+      }
+      else {
+        address = url + 'products/search.php/' + search;
+      }
       fetch(address)
       .then(res => res.json())
       .then (
@@ -17,11 +25,14 @@ export default function Home({url,category,addToCart}) {
       )
     }
 
-  }, [category])
+  }, [category,search]) // If category or search changes.
 
   return (
     <div>
       <h3>Products for {category?.name}</h3>
+      {search &&
+        <p>{search}</p>
+      }
       {products.map(product => (
         <div key={product.id}>
           <p>{product.name}</p>

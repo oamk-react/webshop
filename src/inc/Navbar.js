@@ -3,17 +3,16 @@ import React,{useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import Cart from './Cart';
 
-export default function Navbar({url,cart,setFirstCategory}) {
-  const [categories, setCategories] = useState([]);
+export default function Navbar({url,cart,setCategory}) {
+  const [categories, setCategories] = useState([])
 
   useEffect(() => {
-    const address = url + 'products/getcategories.php';
-    fetch(address)
+    fetch(url + 'products/getcategories.php')
     .then(res => res.json())
     .then (
       (res) => {
         setCategories(res);
-        setFirstCategory(res[0]);
+        setCategory(res[0]); // Set first category selected with callback.
       },(error)=> {
         alert(error);
       }
@@ -36,7 +35,6 @@ export default function Navbar({url,cart,setFirstCategory}) {
             <a className="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Products</a>
             <ul className="dropdown-menu" aria-labelledby="dropdown01">
               {categories.map(category => (
-                //<li key={category.id}><a className="dropdown-item" href="#" onClick={e => changeCategory(category)}>{category.name}</a></li>
                 <li key={category.id}>
                   <Link 
                     className="dropdown-item" 
