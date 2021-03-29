@@ -13,13 +13,12 @@ import NotFound from './NotFound';
 const URL = "http://localhost:8888/webshop/";
 
 function App() {
-  const [category, setCategory] = useState(null);
-  const [searchPhrase, setSearchPhrase] = useState('');
-  const [cart, setCart] = useState([]);
+  const [category, setCategory] = useState(null); // Selected category.
+  const [searchPhrase, setSearchPhrase] = useState(''); // Search phrase if user makes a search.
+  const [cart, setCart] = useState([]); // Shopping cart.
 
-  let location = useLocation();
+  let location = useLocation(); // Get possible parameters passed when user changes category on navigation.
  
-
   // If component is mounted (e.g. user refreshes browser), check if cart is on localstorege
   // and read contents if found.
   useEffect(() => {
@@ -76,8 +75,8 @@ function App() {
   }
 
   function search(phrase) {
+    setCategory(null);
     setSearchPhrase(phrase);
-    //setCategory(null);
   }
 }
 

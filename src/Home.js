@@ -3,9 +3,7 @@ import React,{useState,useEffect} from 'react'
 export default function Home({url,category, search, addToCart}) {
   const [products, setProducts] = useState([]);
 
-  console.log(search);
-
-  useEffect(() => {
+  useEffect(async() => {
     if (category !== null || search !== '') {
       let address = '';
       if (category !== null) {
@@ -14,15 +12,18 @@ export default function Home({url,category, search, addToCart}) {
       else {
         address = url + 'products/search.php/' + search;
       }
-      fetch(address)
-      .then(res => res.json())
-      .then (
-        (res) => {
-          setProducts(res);
-        },(error)=> {
-          alert(error);
+
+      try {
+        const response = await fetch(address);
+        const json = await response.json();
+        if (response.ok) {
+          setProducts(json);
+        } else {
+          alert(json.error);
         }
-      )
+      } catch (error) {
+        alert(error);
+      }
     }
 
   }, [category,search]) // If category or search changes.
@@ -36,6 +37,9 @@ export default function Home({url,category, search, addToCart}) {
       {products.map(product => (
         <div key={product.id}>
           <p>{product.name}</p>
+          <div>
+            <img src={url + 'images/' + product.image} alt="" />
+          </div>
           <button className="btn btn-primary" type="button" onClick={e => addToCart(product)}>Add</button>
         </div>
       ))}

@@ -6,17 +6,19 @@ import Cart from './Cart';
 export default function Navbar({url,cart,setCategory}) {
   const [categories, setCategories] = useState([])
 
-  useEffect(() => {
-    fetch(url + 'products/getcategories.php')
-    .then(res => res.json())
-    .then (
-      (res) => {
-        setCategories(res);
-        setCategory(res[0]); // Set first category selected with callback.
-      },(error)=> {
-        alert(error);
+  useEffect(async() => {
+    try {
+      const response = await fetch(url + 'products/getcategories.php');
+      const json = await response.json();
+      if (response.ok) {
+        setCategories(json);
+        setCategory(json[0]);
+      } else {
+        alert(json.error);
       }
-    )
+    } catch (error) {
+      alert(error);
+    }
   }, [])
 
   return (
